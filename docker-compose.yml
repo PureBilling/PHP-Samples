@@ -1,0 +1,7 @@
+pbdemo:
+  build: .
+  ports:
+    - 0.0.0.0:9249:80
+  volumes:
+    - demo:/var/www/html
+    - pb_load_deps.sh:/usr/local/bin/pb_load_deps.sh
