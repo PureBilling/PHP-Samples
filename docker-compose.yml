@@ -1,5 +1,5 @@
 pbdemo:
-  build: .
+  image: purebilling/php
   ports:
     - 0.0.0.0:9249:80
   volumes:
