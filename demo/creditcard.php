@@ -43,7 +43,7 @@ $chargeToken = $response->getAnswer()->getChargeToken();
 ?>
 
 <form method="POST" action="paid.php">
-    <script src="https://pbjs-pvf.purebilling.com/V1/stable/pb.min.js" class="pb-checkout"
+    <script src="https://pbjs.purebilling.com/V1/stable/pb.min.js" class="pb-checkout"
             pb_public_key="testpublickey_DEMOPUBLICKEY95me92597fd28tGD4r5"
             pb_company_name="PureBilling"
             pb_amount="99.90"

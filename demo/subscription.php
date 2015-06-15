@@ -1,7 +1,7 @@
 <html>
 <head></head>
 <body>
-
+<h1>To make a subscription, you need a valid paymentMethod. Please create a new one.</h1>
 <?php
 
 /**
@@ -15,25 +15,18 @@
 require_once('purebilling-config-test.php');
 use PureBilling\Bundle\SDKBundle\Store\V1 as Store;
 use PureMachine\Bundle\SDKBundle\Service\WebServiceClient;
+use PureMachine\Bundle\SDKBundle\Exception\WebServiceException;
 
 /**
  * Call the webService
  */
-$capture = new Store\Charge\Action\Capture();
-$capture->setAmount(9.90);
-$capture->setCurrency("EUR");
-$capture->setPaymentMethodType("iban");
+$authorize = new Store\Charge\Action\Authorize();
+$authorize->setAmount(9.90);
+$authorize->setCurrency("EUR");
 
 $client = new WebServiceClient();
-$response = $client->call('PureBilling/Charge/Capture', $capture);
-
-/**
- * Check the webService answer
- */
-
-if ($response->getStatus() != 'success') {
-    throw new \Exception($response->getAnswer()->getMessage());
-}
+$response = $client->call('PureBilling/Charge/Authorize', $authorize);
+WebServiceException::raiseIfError($response);
 
 $chargeToken = $response->getAnswer()->getChargeToken();
 
@@ -43,7 +36,7 @@ $chargeToken = $response->getAnswer()->getChargeToken();
  */
 ?>
 
-<form method="POST" action="paid.php">
+<form method="POST" action="subscription_step2.php">
     <script src="https://pbjs.purebilling.com/V1/stable/pb.min.js" class="pb-checkout"
             pb_public_key="testpublickey_DEMOPUBLICKEY95me92597fd28tGD4r5"
             pb_company_name="PureBilling"

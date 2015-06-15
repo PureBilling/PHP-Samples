@@ -1,6 +1,6 @@
 <html>
 <head>
-    <script src="https://pbjs-pvf.purebilling.com/V1/stable/pb.min.js"></script>
+    <script src="https://pbjs.purebilling.com/V1/stable/pb.min.js"></script>
     <script type="text/javascript">
         PUREBILLING_PUBLIC_KEY = 'testpublickey_DEMOPUBLICKEY95me92597fd28tGD4r5';
     </script></head>

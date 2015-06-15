@@ -29,12 +29,19 @@ if ($response->getStatus() != 'success') {
 throw new \Exception("payment error:" . $response->getAnswer()->getMessage());
 }
 
+print "<h1>check using webService</h1>";
 if ($response->getAnswer()->getStatus() == "paid") {
-print "Transaction paid!! (check using webService)<br>";
+    print "Transaction paid!!<br>";
+}
+elseif ($response->getAnswer()->getStatus() == "running") {
+    print "Transaction is running<br>";
 } else {
-print "Transaction refused : " . $response->getAnswer()->getMessage() . "(check using webService)<br>";
+print "Transaction refused : " . $response->getAnswer()->getMessage() . "<br>";
 }
 
+print "<br>";
+print "<b>transaction type:</b> " . $response->getAnswer()->getBillingTransactionType() . "<br>";
+print "<b>detailled status:</b> " . $response->getAnswer()->getDetailledStatus() . "<br>";
 print "<br>";
 
 /**
@@ -53,16 +60,33 @@ if ($validSha != $_REQUEST['pb_sha']) {
     throw new \Exception("SHA error");
 }
 
+print "<h1>check using POST data</h1>";
 if ($_REQUEST["pb_status"] == "paid") {
-    print "Transaction paid!! (check using POST data)<br>";
+    print "Transaction paid!!<br>";
+} elseif ($_REQUEST["pb_status"] == "running") {
+    print "Transaction is running<br>";
 } else {
-    print "Transaction refused : " . $response->getAnswer()->getMessage() . "(check using POST data)<br>";
+    print "<b>Transaction refused:</b> " . $response->getAnswer()->getMessage() . "(check using POST data)<br>";
 }
+
+print "<br>";
+print "<b>transaction type:</b> " . $_REQUEST["pb_billing_transaction_type"] . "<br>";
 
 ?>
 
 <p>
-    <a href="/">Back to home page</a>
+    <?php
+    if ($response->getAnswer()->getDetailledStatus() == "authorized") {
+        print '<a href="creditcard_authorize_collect.php?pb_billing_transaction='
+              .$_REQUEST["pb_billing_transaction"].'">Collect transaction</a><br>';
+        print '<a href="creditcard_authorize_cancel.php?pb_billing_transaction='
+              .$_REQUEST["pb_billing_transaction"].'">Cancel transaction</a><br>';
+    } elseif ($response->getAnswer()->getDetailledStatus() == "collected") {
+        print '<a href="creditcard_refund.php?pb_billing_transaction='
+            .$_REQUEST["pb_billing_transaction"].'">refund transaction</a><br>';
+    }
+    ?>
+    <a href="/">Back to home page</a><br>
 </p>
 
 </body>

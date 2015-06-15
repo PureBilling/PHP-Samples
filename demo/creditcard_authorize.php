@@ -15,24 +15,25 @@
 require_once('purebilling-config-test.php');
 use PureBilling\Bundle\SDKBundle\Store\V1 as Store;
 use PureMachine\Bundle\SDKBundle\Service\WebServiceClient;
+use PureMachine\Bundle\SDKBundle\Exception\WebServiceException;
 
 /**
  * Call the webService
  */
-$capture = new Store\Charge\Action\Capture();
-$capture->setAmount(9.90);
-$capture->setCurrency("EUR");
-$capture->setPaymentMethodType("iban");
+$authorize = new Store\Charge\Action\Authorize();
+$authorize->setAmount(9.90);
+$authorize->setCurrency("EUR");
 
 $client = new WebServiceClient();
-$response = $client->call('PureBilling/Charge/Capture', $capture);
+$response = $client->call('PureBilling/Charge/Authorize', $authorize);
 
 /**
  * Check the webService answer
  */
-
 if ($response->getStatus() != 'success') {
-    throw new \Exception($response->getAnswer()->getMessage());
+    $errorCode = $response->getAnswer()->getCode();
+    $errorMessage = $response->getAnswer()->getMessage();
+    throw new \Exception("ERROR $code: $message");
 }
 
 $chargeToken = $response->getAnswer()->getChargeToken();
